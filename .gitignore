@@ -1,0 +1,10 @@
+.DS_Store
+
+# package directories
+node_modules
+
+dist/*
+
+.idea/*
+
+.env
