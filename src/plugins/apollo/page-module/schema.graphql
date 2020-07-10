@@ -1,0 +1,36 @@
+
+type Page @key(fields: "id") {
+    id: ID!
+    name: String!
+    parentPage: String!
+    createdDate: String
+    modifiedDate: String
+    pageStatus: String
+}
+
+extend type Query {
+    getPages: GetResponsePages
+    getPage(id: ID!): GetResponsePage
+}
+
+extend type Mutation {
+    createPage(
+        name: String!,
+        parentPage: String!
+    ): DefaultResponse!
+}
+
+type GetResponsePage {
+    code: Int!
+    data: Page
+}
+
+type GetResponsePages {
+    code: Int!
+    data: [Page]
+}
+
+type DefaultResponse {
+    code: Int!
+    message: String!
+}
