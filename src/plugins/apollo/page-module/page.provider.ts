@@ -60,9 +60,25 @@ export class PageProvider {
         queryOptions
     );
 
+    const paginator = this.mapper.query(
+        PageModel,
+        keyCondition,
+        queryOptions
+    ).pages();
+
     const data: any = [];
 
     //@todo do pagination
+
+    for await (const page of paginator) {
+      console.log(
+          paginator.count,
+          paginator.scannedCount,
+          paginator.lastEvaluatedKey
+      );
+    }
+
+    console.log(paginator);
 
     for await (const record of iterator) {
       data.push(record);
