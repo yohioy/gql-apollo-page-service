@@ -2,6 +2,16 @@ import { ModuleSessionInfo} from '@graphql-modules/core';
 import { Injectable } from '@graphql-modules/di';
 import { PageModel, IPage } from './page.model';
 
+export interface IPageListOptions {
+  indexName?: string;
+  status?: string;
+  limit?: number;
+  pageSize?: number;
+  startKey?: string;
+  orderBy?: string;
+  scanIndexForward?: boolean;
+}
+
 @Injectable()
 export class PageProvider {
   public mapper;
@@ -29,21 +39,18 @@ export class PageProvider {
     return this.mapper.get(group);
   }
 
-  async getPages () {
+  async getPages (keyCondition: {}, options: IPageListOptions) {
 
     const iterator = this.mapper.query(
         PageModel,
-        { pageStatus: '1' },
-        {
-          limit: 5,
-          scanIndexForward: false,
-          indexName: 'PageStatusIndex'
-        }
+        keyCondition,
+        options
     );
 
     const data: any = [];
 
-    console.log(iterator);
+    //@todo do pagination
+
     for await (const record of iterator) {
       data.push(record);
     }

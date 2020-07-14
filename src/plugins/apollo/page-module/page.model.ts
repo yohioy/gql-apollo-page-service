@@ -55,10 +55,15 @@ Object.defineProperties(PageModel.prototype, {
       pageStatus: {
         type: 'String',
         indexKeyConfigurations: {
-          pageStatusIndex: 'HASH'
+          PageStatusIndex: 'HASH'
         }
       },
-      parentPage: { type: 'String' },
+      parentPage: {
+        type: 'String',
+        indexKeyConfigurations: {
+          ParentPageIndex: 'HASH'
+        }
+      },
       name: { type: 'String' },
       strapLine: { type: 'String' },
       shortDescription: { type: 'String' },
