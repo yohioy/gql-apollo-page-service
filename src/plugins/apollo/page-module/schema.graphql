@@ -9,7 +9,7 @@ type Page @key(fields: "id") {
 }
 
 extend type Query {
-    getPages(parentPage: String, status: String, limit: Int, startKey: String, orderBy: LinkOrderByInput): GetResponsePages
+    getPages(filter: FilterByInput, status: String, options: OptionsByInput, orderBy: LinkOrderByInput): GetResponsePages
     getPage(id: ID!): GetResponsePage
 }
 
@@ -20,9 +20,18 @@ extend type Mutation {
     ): DefaultResponse!
 }
 
+input FilterByInput {
+    parentPage: String
+}
+
+input OptionsByInput {
+    limit: Int
+    startKey: String
+}
+
 input LinkOrderByInput {
     name: Sort
-    modifiedDate: Sort
+    createdDate: Sort
 }
 
 enum Sort {

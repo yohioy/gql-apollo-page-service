@@ -1,5 +1,6 @@
 import { responseType } from '@masteryo/masteryo-utils';
-import { PageProvider, IPageListOptions } from '../page.provider';
+import { PageProvider, IKeyConditions, IQueryOptions } from '../page.provider';
+import {equals} from '@aws/dynamodb-expressions';
 
 export interface IQuery {
     getPages: object;
@@ -11,37 +12,56 @@ interface IGetPageById {
 }
 
 export const Query: IQuery = {
-    getPages: async(_: any, args: { parentPage, status, startKey, limit, orderBy }, context: any) => {
+    getPages: async(_: any, args: { filter, status, options, orderBy }, context: any) => {
 
-        let options: IPageListOptions = {};
-        let keyCondition: { parentPage: String } = {} as any;
+        let queryOptions: IQueryOptions = {};
+        let keyCondition: IKeyConditions = {};
 
-        options.indexName = 'ParentPageIndex';
 
-        if(args.parentPage) {
-            keyCondition.parentPage = args.parentPage;
-        }
         if(args.status) {
-            options.status = args.status;
+            keyCondition.pageStatus = args.status;
+        } else {
+            keyCondition.pageStatus = '1';
         }
-        if(args.startKey) {
-            options.startKey = args.startKey;
-        }
-        if(args.limit) {
-            options.limit = args.limit;
-            options.pageSize = args.limit;
-        }
-        if(args.orderBy) {
-            options.orderBy = args.orderBy;
-        }
-        options.scanIndexForward = (args.orderBy === 'asc') ? true : false;
 
-        console.log(options);
+        if(args.filter) {
+            queryOptions.filter = {
+                ...equals(args.filter.parentPage),
+                    subject: 'parentPage'
+                }
+        }
+
+        if(args.options.startKey) {
+            queryOptions.startKey = args.options.startKey;
+        }
+
+        if(args.options.limit) {
+            queryOptions.limit = args.options.limit;
+            //queryOptions.pageSize = args.options.limit;
+        }
+
+        if(args.orderBy) {
+            if(args.orderBy.name) {
+                queryOptions.indexName = 'PageStatusNameIndex';
+                queryOptions.scanIndexForward = (args.orderBy.name === 'asc') ? true : false;
+            } else if(args.orderBy.createdDate) {
+                queryOptions.indexName = 'PageStatusCreatedDateIndex';
+                queryOptions.scanIndexForward = (args.orderBy.createdDate === 'asc') ? true : false;
+            }
+        } else {
+            queryOptions.indexName = 'PageStatusCreatedDateIndex';
+            queryOptions.scanIndexForward = false;
+        }
+
+
+        console.log('args', args);
+        console.log('keyCondition', keyCondition);
+        console.log('queryOptions', queryOptions);
 
         const pageProvider: PageProvider = context.injector.get(PageProvider);
 
         try {
-            const result = await pageProvider.getPages(keyCondition, options);
+            const result = await pageProvider.getPages(keyCondition, queryOptions);
             return { ...responseType.success, ...{ data: result } };
         } catch (e) {
             console.log(responseType.failed, e);

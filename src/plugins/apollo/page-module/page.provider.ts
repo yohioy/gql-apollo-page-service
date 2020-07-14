@@ -12,6 +12,19 @@ export interface IPageListOptions {
   scanIndexForward?: boolean;
 }
 
+export interface IKeyConditions {
+  parentPage?: string;
+  pageStatus?: string;
+}
+export interface IQueryOptions {
+  filter?: object;
+  startKey?: string;
+  limit?: string;
+  pageSize?: string;
+  indexName?: string;
+  scanIndexForward?: boolean;
+}
+
 @Injectable()
 export class PageProvider {
   public mapper;
@@ -39,12 +52,12 @@ export class PageProvider {
     return this.mapper.get(group);
   }
 
-  async getPages (keyCondition: {}, options: IPageListOptions) {
+  async getPages (keyCondition: IKeyConditions, queryOptions: IQueryOptions) {
 
     const iterator = this.mapper.query(
         PageModel,
         keyCondition,
-        options
+        queryOptions
     );
 
     const data: any = [];
