@@ -1,6 +1,7 @@
 import { ModuleSessionInfo} from '@graphql-modules/core';
 import { Injectable } from '@graphql-modules/di';
 import { PageModel, IPage } from './page.model';
+import {equals} from '@aws/dynamodb-expressions';
 
 export interface IPageListOptions {
   indexName?: string;
@@ -52,7 +53,57 @@ export class PageProvider {
     return this.mapper.get(group);
   }
 
-  async getPages (keyCondition: IKeyConditions, queryOptions: IQueryOptions) {
+  getPagesParams(args) {
+
+    let queryOptions: IQueryOptions = {};
+    let keyCondition: IKeyConditions = {};
+
+
+    if(args.status) {
+      keyCondition.pageStatus = args.status;
+    } else {
+      keyCondition.pageStatus = '1';
+    }
+
+    if(args.filter) {
+      queryOptions.filter = {
+        ...equals(args.filter.parentPage),
+        subject: 'parentPage'
+      }
+    }
+
+    if(args.options.startKey) {
+      queryOptions.startKey = args.options.startKey;
+    }
+
+    if(args.options.limit) {
+      queryOptions.limit = args.options.limit;
+      //queryOptions.pageSize = args.options.limit;
+    }
+
+    if(args.orderBy) {
+      if(args.orderBy.name) {
+        queryOptions.indexName = 'PageStatusNameIndex';
+        queryOptions.scanIndexForward = (args.orderBy.name === 'asc') ? true : false;
+      } else if(args.orderBy.createdDate) {
+        queryOptions.indexName = 'PageStatusCreatedDateIndex';
+        queryOptions.scanIndexForward = (args.orderBy.createdDate === 'asc') ? true : false;
+      }
+    } else {
+      queryOptions.indexName = 'PageStatusCreatedDateIndex';
+      queryOptions.scanIndexForward = false;
+    }
+
+    return {
+      keyCondition: keyCondition,
+      queryOptions: queryOptions
+    }
+  }
+
+
+  async getPages (args) {
+
+    const { keyCondition, queryOptions } = this.getPagesParams(args);
 
     const iterator = this.mapper.query(
         PageModel,
