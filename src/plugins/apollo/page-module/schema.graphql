@@ -3,8 +3,23 @@ type Page @key(fields: "id") {
     id: ID!
     name: String!
     parentPage: String!
+    strapLine:String
+    shortDescription: String
+    longDescription: String
+    seoFriendlyLinkId: String
+    seoFriendlyLink: String
+    customLink: String
+    metaTitle: String
+    metaDescription: String
+    metaKeywords: String
+    featuredImage: String
+    templateType: String
+    menuLocation: String
+    relatedPages: String
+    pagePosition: String
     createdDate: String
     modifiedDate: String
+    expiryDate: String
     pageStatus: String
 }
 
@@ -16,7 +31,23 @@ extend type Query {
 extend type Mutation {
     createPage(
         name: String!,
-        parentPage: String!
+        parentPage: String!,
+        strapLine: String,
+        shortDescription: String,
+        longDescription: String,
+        seoFriendlyLinkId: String,
+        seoFriendlyLink: String,
+        customLink: String,
+        metaTitle: String,
+        metaDescription: String,
+        metaKeywords: String,
+        featuredImage: String
+        templateType: String,
+        menuLocation: String,
+        relatedPages: String,
+        pagePosition: String,
+        expiryDate: String
+        pageStatus: String
     ): DefaultResponse!
 }
 
@@ -26,12 +57,17 @@ input FilterByInput {
 
 input OptionsByInput {
     limit: Int
-    startKey: String
+    startKey: StartKeyInput
 }
 
 input LinkOrderByInput {
     name: Sort
     createdDate: Sort
+}
+
+input StartKeyInput {
+    id: String
+    createdDate: String
 }
 
 enum Sort {
@@ -47,6 +83,17 @@ type GetResponsePage {
 type GetResponsePages {
     code: Int!
     data: [Page]
+    pagination: PaginateOptions
+}
+
+type PaginateOptions {
+    count: Int
+    lastEvaluatedKey: LastEvaluatedKey
+}
+
+type LastEvaluatedKey {
+    id: String
+    createdDate: String
 }
 
 type DefaultResponse {

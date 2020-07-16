@@ -1,6 +1,6 @@
 import { ModuleSessionInfo} from '@graphql-modules/core';
 import { Injectable } from '@graphql-modules/di';
-import { PageModel, IPage } from './page.model';
+import { PageModel } from './page.model';
 import {equals} from '@aws/dynamodb-expressions';
 
 export interface IPageListOptions {
@@ -8,7 +8,7 @@ export interface IPageListOptions {
   status?: string;
   limit?: number;
   pageSize?: number;
-  startKey?: string;
+  startKey?: object;
   orderBy?: string;
   scanIndexForward?: boolean;
 }
@@ -19,7 +19,7 @@ export interface IKeyConditions {
 }
 export interface IQueryOptions {
   filter?: object;
-  startKey?: string;
+  startKey?: object;
   limit?: string;
   pageSize?: string;
   indexName?: string;
@@ -34,7 +34,7 @@ export class PageProvider {
     this.mapper = moduleSessionInfo.session.request.dataMapper;
   }
 
-  async createPage (data: IPage): Promise<any> {
+  async createPage (data): Promise<any> {
 
     const page = new PageModel();
     page.id = data.id;
@@ -73,7 +73,11 @@ export class PageProvider {
     }
 
     if(args.options.startKey) {
-      queryOptions.startKey = args.options.startKey;
+      queryOptions.startKey = {
+        ...args.options.startKey,
+        ...keyCondition
+      };
+
     }
 
     if(args.options.limit) {
@@ -105,11 +109,7 @@ export class PageProvider {
 
     const { keyCondition, queryOptions } = this.getPagesParams(args);
 
-    const iterator = this.mapper.query(
-        PageModel,
-        keyCondition,
-        queryOptions
-    );
+    console.log('getpages log', PageModel, keyCondition,queryOptions);
 
     const paginator = this.mapper.query(
         PageModel,
@@ -117,24 +117,29 @@ export class PageProvider {
         queryOptions
     ).pages();
 
-    const data: any = [];
-
-    //@todo do pagination
+    let data: any = [];
+    let pagination: any = {};
 
     for await (const page of paginator) {
-      console.log(
-          paginator.count,
-          paginator.scannedCount,
-          paginator.lastEvaluatedKey
-      );
+
+      for await (const pageItem of page) {
+        data.push(pageItem);
+      }
+
+      pagination = {
+        count: paginator.count,
+        scannedCount: paginator.scannedCount,
+        lastEvaluatedKey: paginator.lastEvaluatedKey
+      }
     }
 
-    console.log(paginator);
+  console.log(pagination);
 
-    for await (const record of iterator) {
-      data.push(record);
+    return {
+      data: data,
+      pagination: pagination
     }
-    return data;
+
   }
 
 }

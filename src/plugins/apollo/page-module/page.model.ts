@@ -1,82 +1,74 @@
-import { DynamoDbSchema, DynamoDbTable } from '@aws/dynamodb-data-mapper';
+import {
+  attribute,
+  hashKey,
+  rangeKey,
+  table,
+} from '@aws/dynamodb-data-mapper-annotations';
 
-export interface IPage {
+@table('pages')
+export class PageModel {
+
+  @hashKey({
+    type: "String"
+  })
   id: string | undefined;
-  parentPage: string | undefined;
+
+  @rangeKey({
+    type: "Number"
+  })
+  createdDate: number | undefined;
+
+  @attribute()
   name: string | undefined;
-  strapLine?: string | undefined;
-  shortDescription?: string | undefined;
-  longDescription?: string | undefined;
-  seoFriendlyLinkId?: string | undefined;
-  seoFriendlyLink?: string | undefined;
-  customLink?: string | undefined;
-  templateType?: string | undefined;
-  menuLocation?: string | undefined;
-  relatedPages?: string | undefined;
-  pagePosition?: string | undefined;
-  createdDate?: number | undefined;
-  modifiedDate?: number | undefined;
-  pageStatus?: string | undefined;
+
+  @attribute()
+  parentPage: string | undefined;
+
+  @attribute()
+  strapLine: string | undefined;
+
+  @attribute()
+  shortDescription: string | undefined;
+
+  @attribute()
+  longDescription: string | undefined;
+
+  @attribute()
+  seoFriendlyLinkId: string | undefined;
+
+  @attribute()
+  customLink: string | undefined;
+
+  @attribute()
+  metaTitle: string | undefined;
+
+  @attribute()
+  metaDescription: string | undefined;
+
+  @attribute()
+  metaKeywords: string | undefined;
+
+  @attribute()
+  featuredImage: string | undefined;
+
+  @attribute()
+  templateType: string | undefined;
+
+  @attribute()
+  menuLocation: string | undefined;
+
+  @attribute()
+  relatedPages: string | undefined;
+
+  @attribute()
+  pagePosition: string | undefined;
+
+  @attribute()
+  modifiedDate: number | undefined;
+
+  @attribute()
+  expiryDate: number | undefined;
+
+  @attribute()
+  pageStatus: string | undefined;
 }
-
-export class PageModel implements IPage {
-  id;
-  parentPage;
-  name;
-  strapLine;
-  shortDescription;
-  longDescription;
-  seoFriendlyLinkId;
-  seoFriendlyLink;
-  customLink;
-  templateType;
-  menuLocation;
-  relatedPages;
-  pagePosition;
-  createdDate;
-  modifiedDate;
-  pageStatus;
-}
-
-Object.defineProperties(PageModel.prototype, {
-  [DynamoDbTable]: {
-    value: 'pages'
-  },
-  [DynamoDbSchema]: {
-    value: {
-      id: {
-        type: 'String',
-        keyType: 'HASH'
-      },
-      createdDate: {
-        type: 'Date',
-        keyType: 'RANGE'
-      },
-      pageStatus: {
-        type: 'String',
-        indexKeyConfigurations: {
-          PageStatusIndex: 'HASH'
-        }
-      },
-      parentPage: {
-        type: 'String',
-        indexKeyConfigurations: {
-          ParentPageIndex: 'HASH'
-        }
-      },
-      name: { type: 'String' },
-      strapLine: { type: 'String' },
-      shortDescription: { type: 'String' },
-      longDescription: { type: 'String' },
-      seoFriendlyLinkId: { type: 'String' },
-      seoFriendlyLink: { type: 'String' },
-      customLink: { type: 'String' },
-      templateType: { type: 'String' },
-      menuLocation: { type: 'String' },
-      relatedPages: { type: 'String' },
-      pagePosition: { type: 'String' },
-      modifiedDate: { type: 'Date' }
-    }
-  }
-});
-

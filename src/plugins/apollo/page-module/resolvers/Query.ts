@@ -17,7 +17,8 @@ export const Query: IQuery = {
 
         try {
             const result = await pageProvider.getPages(args);
-            return { ...responseType.success, ...{ data: result } };
+            console.log(result);
+            return { ...responseType.success, ...result };
         } catch (e) {
             console.log(responseType.failed, e);
             return responseType.failed;
