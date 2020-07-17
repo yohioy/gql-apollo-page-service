@@ -3,20 +3,20 @@ import { Injectable } from '@graphql-modules/di';
 import { PageModel } from './page.model';
 import {equals} from '@aws/dynamodb-expressions';
 
-export interface IPageListOptions {
-  indexName?: string;
-  status?: string;
-  limit?: number;
-  pageSize?: number;
-  startKey?: object;
-  orderBy?: string;
-  scanIndexForward?: boolean;
+export interface IPageInput {
+  id: string;
+  name: string;
+  parentPage: string;
+  pagePosition: string;
+  pageStatus: string;
+  createdDate: number;
+  modifiedDate: number;
 }
 
 export interface IKeyConditions {
-  parentPage?: string;
   pageStatus?: string;
 }
+
 export interface IQueryOptions {
   filter?: object;
   startKey?: object;
@@ -34,24 +34,35 @@ export class PageProvider {
     this.mapper = moduleSessionInfo.session.request.dataMapper;
   }
 
-  async createPage (data): Promise<any> {
+  async createPage (data: IPageInput): Promise<any> {
 
     const page = new PageModel();
-    page.id = data.id;
-    page.parentPage = data.parentPage;
-    page.name = data.name;
-    page.pagePosition = data.pagePosition;
-    page.pageStatus = data.pageStatus;
-    page.createdDate = data.createdDate;
-    page.modifiedDate = data.modifiedDate;
+
+    for (const [key, value] of Object.entries(data)) {
+      page[key] = value;
+    }
 
     return this.mapper.put(page);
   }
 
-  async getPage (type: string) {
-    const group = new PageModel();
-    return this.mapper.get(group);
+  async updatePage (data: IPageInput): Promise<any> {
+    const id = data.id;
+    let page = await this.getPage(id);
+
+    for (const [key, value] of Object.entries(data)) {
+      page[key] = value;
+    }
+
+    return this.mapper.update(page);
   }
+
+
+  async getPage (id: string) {
+    const page = new PageModel();
+    page.id = id;
+    return this.mapper.get(page);
+  }
+
 
   getPagesParams(args) {
 
@@ -82,7 +93,6 @@ export class PageProvider {
 
     if(args.options.limit) {
       queryOptions.limit = args.options.limit;
-      //queryOptions.pageSize = args.options.limit;
     }
 
     if(args.orderBy) {
@@ -133,13 +143,13 @@ export class PageProvider {
       }
     }
 
-  console.log(pagination);
-
     return {
       data: data,
       pagination: pagination
     }
 
   }
+
+
 
 }

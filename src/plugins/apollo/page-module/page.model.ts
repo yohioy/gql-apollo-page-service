@@ -13,9 +13,7 @@ export class PageModel {
   })
   id: string | undefined;
 
-  @rangeKey({
-    type: "Number"
-  })
+  @attribute()
   createdDate: number | undefined;
 
   @attribute()
@@ -49,7 +47,7 @@ export class PageModel {
   metaKeywords: string | undefined;
 
   @attribute()
-  featuredImage: string | undefined;
+  images: object | undefined;
 
   @attribute()
   templateType: string | undefined;
