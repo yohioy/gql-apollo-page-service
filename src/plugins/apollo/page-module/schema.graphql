@@ -12,7 +12,7 @@ type Page @key(fields: "id") {
     metaTitle: String
     metaDescription: String
     metaKeywords: String
-    featuredImage: String
+    images: ImageTypes
     templateType: String
     menuLocation: String
     relatedPages: String
@@ -29,35 +29,30 @@ extend type Query {
 }
 
 extend type Mutation {
-    createPage(
-        name: String!,
-        parentPage: String!,
-        strapLine: String,
-        shortDescription: String,
-        longDescription: String,
-        seoFriendlyLinkId: String,
-        seoFriendlyLink: String,
-        customLink: String,
-        metaTitle: String,
-        metaDescription: String,
-        metaKeywords: String,
-        featuredImage: String
-        templateType: String,
-        menuLocation: String,
-        relatedPages: String,
-        pagePosition: String,
-        expiryDate: String
-        pageStatus: String
-    ): DefaultResponse!
-
-    updatePage(
-        id: String!,
-        name: String,,
-        parentPage: String
-        pageStatus: String
-    ): DefaultResponse!
+    createPage(data: PageInput): DefaultResponse!
+    updatePage(id: String!, data: PageInput): DefaultResponse!
 }
 
+input PageInput {
+    name: String,
+    parentPage: String,
+    strapLine: String,
+    shortDescription: String,
+    longDescription: String,
+    seoFriendlyLinkId: String,
+    seoFriendlyLink: String,
+    customLink: String,
+    metaTitle: String,
+    metaDescription: String,
+    metaKeywords: String,
+    images: ImageTypesInput,
+    templateType: String,
+    menuLocation: String,
+    relatedPages: String,
+    pagePosition: String,
+    expiryDate: String
+    pageStatus: String
+}
 
 input FilterByInput {
     parentPage: String
@@ -79,10 +74,24 @@ input StartKeyInput {
     name: String
 }
 
+
 enum Sort {
     asc
     desc
 }
+
+input ImageTypesInput {
+    thumbnail: String
+    featured: String
+    banner: String
+}
+
+type ImageTypes {
+    thumbnail: String
+    featured: String
+    banner: String
+}
+
 
 type GetResponsePage {
     code: Int!

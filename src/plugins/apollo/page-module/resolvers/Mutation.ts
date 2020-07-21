@@ -9,17 +9,19 @@ export interface IMutation {
 }
 
 export const Mutation: IMutation = {
-    createPage: async (_: any, args: IPageInput, context: ModuleContext): Promise<any> => {
+    createPage: async (_: any, args: {data: IPageInput}, context: ModuleContext): Promise<any> => {
 
         const pageProvider: PageProvider = context.injector.get(PageProvider);
 
         const pageData = {
             ...{
-                id: uuid(),
+                id: uuid()
+            },
+            ...args.data,
+            ...{
                 createdDate: Date.now(),
                 modifiedDate: Date.now()
             },
-            ...args
         };
 
         // Add page
@@ -31,12 +33,15 @@ export const Mutation: IMutation = {
             return responseType.failed;
         }
     },
-    updatePage: async (_: any, args: IPageInput, context: ModuleContext): Promise<any> => {
+    updatePage: async (_: any, args: {id, data: IPageInput}, context: ModuleContext): Promise<any> => {
 
         const pageProvider: PageProvider = context.injector.get(PageProvider);
 
         const pageData = {
-            ...args,
+            ...{
+                id: args.id
+            },
+            ...args.data,
             ...{
                 modifiedDate: Date.now()
             }
