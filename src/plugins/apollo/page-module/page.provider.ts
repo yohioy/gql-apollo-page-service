@@ -120,7 +120,7 @@ export class PageProvider {
 
     const { keyCondition, queryOptions } = this.getPagesParams(args);
 
-    console.log('getpages log', PageModel, keyCondition,queryOptions);
+    //console.log('getpages log', PageModel, keyCondition,queryOptions);
 
     const paginator = this.mapper.query(
         PageModel,

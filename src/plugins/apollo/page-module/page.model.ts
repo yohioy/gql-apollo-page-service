@@ -5,6 +5,7 @@ import {
   table,
 } from '@aws/dynamodb-data-mapper-annotations';
 
+
 @table('pages')
 export class PageModel {
 
@@ -13,7 +14,9 @@ export class PageModel {
   })
   id: string | undefined;
 
-  @attribute()
+  @attribute({
+    type: "Number"
+  })
   createdDate: number | undefined;
 
   @attribute()
@@ -56,7 +59,7 @@ export class PageModel {
   menuLocation: string | undefined;
 
   @attribute()
-  relatedPages: string | undefined;
+  relatedPages: object | undefined;
 
   @attribute()
   pagePosition: string | undefined;

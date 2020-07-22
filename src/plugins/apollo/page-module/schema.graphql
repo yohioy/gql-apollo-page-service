@@ -1,28 +1,4 @@
 
-type Page @key(fields: "id") {
-    id: ID!
-    name: String!
-    parentPage: String!
-    strapLine:String
-    shortDescription: String
-    longDescription: String
-    seoFriendlyLinkId: String
-    seoFriendlyLink: String
-    customLink: String
-    metaTitle: String
-    metaDescription: String
-    metaKeywords: String
-    images: ImageTypes
-    templateType: String
-    menuLocation: String
-    relatedPages: String
-    pagePosition: String
-    createdDate: String
-    modifiedDate: String
-    expiryDate: String
-    pageStatus: String
-}
-
 extend type Query {
     getPages(filter: FilterByInput, status: String, options: OptionsByInput, orderBy: LinkOrderByInput): GetResponsePages
     getPage(id: ID!): GetResponsePage
@@ -32,6 +8,9 @@ extend type Mutation {
     createPage(data: PageInput): DefaultResponse!
     updatePage(id: String!, data: PageInput): DefaultResponse!
 }
+
+############################
+# Inputs
 
 input PageInput {
     name: String,
@@ -48,7 +27,7 @@ input PageInput {
     images: ImageTypesInput,
     templateType: String,
     menuLocation: String,
-    relatedPages: String,
+    relatedPages: RelatedPagesInput,
     pagePosition: String,
     expiryDate: String
     pageStatus: String
@@ -74,16 +53,49 @@ input StartKeyInput {
     name: String
 }
 
+input ImageTypesInput {
+    thumbnail: String
+    featured: String
+    banner: String
+}
+
+input RelatedPagesInput {
+    id: String
+}
+
+############################
+# Enum
 
 enum Sort {
     asc
     desc
 }
 
-input ImageTypesInput {
-    thumbnail: String
-    featured: String
-    banner: String
+############################
+# Types
+
+type Page @key(fields: "id") {
+    id: ID!
+    name: String!
+    parentPage: String!
+    strapLine:String
+    shortDescription: String
+    longDescription: String
+    seoFriendlyLinkId: String
+    seoFriendlyLink: String
+    customLink: String
+    metaTitle: String
+    metaDescription: String
+    metaKeywords: String
+    images: ImageTypes
+    templateType: String
+    menuLocation: String
+    relatedPages: String
+    pagePosition: String
+    createdDate: String
+    modifiedDate: String
+    expiryDate: String
+    pageStatus: String
 }
 
 type ImageTypes {
@@ -92,16 +104,8 @@ type ImageTypes {
     banner: String
 }
 
-
-type GetResponsePage {
-    code: Int!
-    data: Page
-}
-
-type GetResponsePages {
-    code: Int!
-    data: [Page]
-    pagination: PaginateOptions
+type RelatedPages {
+    page: Page
 }
 
 type PaginateOptions {
@@ -115,7 +119,22 @@ type LastEvaluatedKey {
     name: String
 }
 
+
+############################
+# Responses
+
 type DefaultResponse {
     code: Int!
     message: String!
+}
+
+type GetResponsePage {
+    code: Int!
+    data: Page
+}
+
+type GetResponsePages {
+    code: Int!
+    data: [Page]
+    pagination: PaginateOptions
 }

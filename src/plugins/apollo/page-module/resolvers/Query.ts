@@ -10,14 +10,20 @@ interface IGetPageById {
     id: string;
 }
 
+interface IGetPages {
+    status: string;
+    filter: object;
+    options: object;
+    orderBy: object;
+}
+
 export const Query: IQuery = {
-    getPages: async(_: any, args: { filter, status, options, orderBy }, context: any) => {
+    getPages: async(_: any, args: IGetPages, context: any) => {
 
         const pageProvider: PageProvider = context.injector.get(PageProvider);
 
         try {
             const result = await pageProvider.getPages(args);
-            console.log(result);
             return { ...responseType.success, ...result };
         } catch (e) {
             console.log(responseType.failed, e);
