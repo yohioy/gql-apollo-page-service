@@ -2,6 +2,7 @@
 extend type Query {
     getPages(filter: FilterByInput, status: String, options: OptionsByInput, orderBy: LinkOrderByInput): GetResponsePages
     getPage(id: ID!): GetResponsePage
+    relatedPages(id: ID): GetResponsePage
 }
 
 extend type Mutation {
@@ -27,7 +28,7 @@ input PageInput {
     images: ImageTypesInput,
     templateType: String,
     menuLocation: String,
-    relatedPages: RelatedPagesInput,
+    relatedPages: [RelatedPagesInput],
     pagePosition: String,
     expiryDate: String
     pageStatus: String
@@ -90,12 +91,18 @@ type Page @key(fields: "id") {
     images: ImageTypes
     templateType: String
     menuLocation: String
-    relatedPages: String
+    relatedPages: [RelatedPages]
     pagePosition: String
     createdDate: String
     modifiedDate: String
     expiryDate: String
     pageStatus: String
+}
+
+type RelatedPages {
+    id: String
+    name: String
+    parentPage: String
 }
 
 type ImageTypes {

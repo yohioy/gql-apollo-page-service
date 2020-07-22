@@ -10,6 +10,7 @@ export interface IPageInput {
   pagePosition: string;
   pageStatus: string;
   images: object;
+  relatedPages: object;
   createdDate: number;
   modifiedDate: number;
 }
