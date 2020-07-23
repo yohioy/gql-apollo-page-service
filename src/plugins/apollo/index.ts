@@ -3,6 +3,7 @@ import {ApolloServer, AuthenticationError} from 'apollo-server-hapi';
 import { buildFederatedSchema } from '@apollo/federation';
 import { Server } from '@hapi/hapi';
 import { PageModule } from './page-module';
+import { ConsultantModule } from './consultant-module';
 import { dataMapper } from '@masteryo/masteryo-dynamodb-mapper';
 
 const register = async (server: Server, options): Promise<void> => {

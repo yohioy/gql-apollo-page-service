@@ -1,7 +1,7 @@
 import { ModuleSessionInfo} from '@graphql-modules/core';
 import { Injectable } from '@graphql-modules/di';
 import { PageModel } from './page.model';
-import {equals} from '@aws/dynamodb-expressions';
+import {equals,ConditionExpression} from '@aws/dynamodb-expressions';
 
 export interface IPageInput {
   id: string;
@@ -11,6 +11,7 @@ export interface IPageInput {
   pageStatus: string;
   images: object;
   relatedPages: object;
+  template: string;
   createdDate: number;
   modifiedDate: number;
 }
@@ -79,11 +80,31 @@ export class PageProvider {
     }
 
     if(args.filter) {
-      queryOptions.filter = {
-        ...equals(args.filter.parentPage),
-        subject: 'parentPage'
+      let filterListExpression: any = [];
+      for(let filterName in args.filter) {
+        console.log('filter', args.filter[filterName]);
+
+        const filterCondition = {
+          ...equals(args.filter[filterName]),
+          subject: filterName
+        };
+
+        filterListExpression.push(filterCondition);
       }
+
+      let andExpression: ConditionExpression;
+
+      if(filterListExpression.length > 0) {
+        andExpression = {
+          type: 'And',
+          conditions: filterListExpression
+        };
+      } else {
+        andExpression = filterListExpression;
+      }
+      queryOptions.filter = andExpression;
     }
+
 
     if(args.options.startKey) {
       queryOptions.startKey = {

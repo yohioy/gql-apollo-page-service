@@ -53,7 +53,7 @@ export class PageModel {
   images: object | undefined;
 
   @attribute()
-  templateType: string | undefined;
+  template: string | undefined;
 
   @attribute()
   menuLocation: string | undefined;

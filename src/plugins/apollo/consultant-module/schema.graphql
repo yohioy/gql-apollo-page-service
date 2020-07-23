@@ -1,0 +1,21 @@
+
+extend type Query {
+    getConsultant(id: ID!): GetResponseConsultant
+
+}
+
+type Consultant @key(fields: "id") {
+    id: ID!
+    nameCharacter: String
+    qualifications: String
+    interests: String
+    hospitals: String
+    email: String
+    website: String
+    telephone: String
+}
+
+
+type GetResponseConsultant {
+    data: Consultant
+}
