@@ -1,7 +1,10 @@
 
 extend type Query {
     getConsultant(id: ID!): GetResponseConsultant
+}
 
+extend type Mutation {
+    createConsultant(data: ConsultantInput): DefaultResponse!
 }
 
 type Consultant @key(fields: "id") {
@@ -13,8 +16,42 @@ type Consultant @key(fields: "id") {
     email: String
     website: String
     telephone: String
+    specialities: [SpecialityAndServicePages]
+    services: [SpecialityAndServicePages]
 }
 
+type SpecialityAndServicePages {
+    id: String
+    name: String
+    shortDescription: String
+    seoFriendlyLinkId: String
+    seoFriendlyLink: String
+    customLink: String
+    template: String
+    pageStatus: String
+}
+
+extend type Page {
+    consultantInfo: Consultant
+}
+
+input ConsultantInput {
+    id: ID!
+    nameCharacter: String
+    qualifications: String
+    interests: String
+    hospitals: String
+    email: String
+    website: String
+    telephone: String
+    specialities: [SpecialityAndServicePagesInput]
+    services: [SpecialityAndServicePagesInput]
+}
+
+
+input SpecialityAndServicePagesInput {
+    id: String
+}
 
 type GetResponseConsultant {
     data: Consultant

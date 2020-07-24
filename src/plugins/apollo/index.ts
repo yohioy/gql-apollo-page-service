@@ -9,7 +9,7 @@ import { dataMapper } from '@masteryo/masteryo-dynamodb-mapper';
 const register = async (server: Server, options): Promise<void> => {
 
   let apolloServer = new ApolloServer({
-    schema: buildFederatedSchema([PageModule]),
+    schema: buildFederatedSchema([PageModule,ConsultantModule]),
     context: async (session: { request }) => {
 
       const credentials = session.request.auth.credentials;

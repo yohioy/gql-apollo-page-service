@@ -21,13 +21,18 @@ export const Mutation: IMutation = {
             ...{
                 createdDate: Date.now(),
                 modifiedDate: Date.now()
-            },
+            }
         };
+
+        console.log(args.data);
 
         // Add page
         try {
-            await pageProvider.createPage(pageData);
-            return responseType.success;
+            const result = await pageProvider.createPage(pageData);
+            return {
+                data: result,
+                ...responseType.success
+            };
         } catch (e) {
             console.log(responseType.failed, e);
             return responseType.failed;
@@ -49,8 +54,11 @@ export const Mutation: IMutation = {
 
         // update page
         try {
-            await pageProvider.updatePage(pageData);
-            return responseType.success;
+            const result = await pageProvider.updatePage(pageData);
+            return {
+                data: result,
+                ...responseType.success
+            };
         } catch (e) {
             console.log(responseType.failed, e);
             return responseType.failed;

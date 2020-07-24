@@ -11,6 +11,61 @@ extend type Mutation {
 }
 
 ############################
+# Types
+
+type Page @key(fields: "id") {
+    id: ID!
+    name: String!
+    parentPage: String!
+    strapLine:String
+    shortDescription: String
+    longDescription: String
+    seoFriendlyLinkId: String
+    seoFriendlyLink: String
+    customLink: String
+    metaTitle: String
+    metaDescription: String
+    metaKeywords: String
+    images: ImageTypes
+    template: String
+    menuLocation: String
+    relatedPages: [RelatedPages]
+    pagePosition: String
+    createdDate: String
+    modifiedDate: String
+    expiryDate: String
+    pageStatus: String
+}
+
+type RelatedPages {
+    id: String
+    name: String
+    parentPage: String
+    seoFriendlyLinkId: String
+    seoFriendlyLink: String
+    customLink: String
+    pageStatus: String
+}
+
+type ImageTypes {
+    thumbnail: String
+    featured: String
+    banner: String
+}
+
+type PaginateOptions {
+    count: Int
+    lastEvaluatedKey: LastEvaluatedKey
+}
+
+type LastEvaluatedKey {
+    id: String
+    createdDate: String
+    name: String
+}
+
+
+############################
 # Inputs
 
 input PageInput {
@@ -73,59 +128,6 @@ enum Sort {
     desc
 }
 
-############################
-# Types
-
-type Page @key(fields: "id") {
-    id: ID!
-    name: String!
-    parentPage: String!
-    strapLine:String
-    shortDescription: String
-    longDescription: String
-    seoFriendlyLinkId: String
-    seoFriendlyLink: String
-    customLink: String
-    metaTitle: String
-    metaDescription: String
-    metaKeywords: String
-    images: ImageTypes
-    template: String
-    menuLocation: String
-    relatedPages: [RelatedPages]
-    pagePosition: String
-    createdDate: String
-    modifiedDate: String
-    expiryDate: String
-    pageStatus: String
-}
-
-type RelatedPages {
-    id: String
-    name: String
-    parentPage: String
-}
-
-type ImageTypes {
-    thumbnail: String
-    featured: String
-    banner: String
-}
-
-type RelatedPages {
-    page: Page
-}
-
-type PaginateOptions {
-    count: Int
-    lastEvaluatedKey: LastEvaluatedKey
-}
-
-type LastEvaluatedKey {
-    id: String
-    createdDate: String
-    name: String
-}
 
 
 ############################
@@ -134,6 +136,7 @@ type LastEvaluatedKey {
 type DefaultResponse {
     code: Int!
     message: String!
+    data: Page
 }
 
 type GetResponsePage {
