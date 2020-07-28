@@ -1,7 +1,7 @@
 import { ModuleSessionInfo} from '@graphql-modules/core';
 import { Injectable } from '@graphql-modules/di';
 import { PageModel } from './page.model';
-import {equals,ConditionExpression} from '@aws/dynamodb-expressions';
+import { equals, ConditionExpression } from '@aws/dynamodb-expressions';
 
 export interface IPageInput {
   id: string;
@@ -60,10 +60,44 @@ export class PageProvider {
   }
 
 
-  async getPage (id: string) {
-    const page = new PageModel();
-    page.id = id;
-    return this.mapper.get(page);
+
+  isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+  }
+
+
+
+  async getPage (id: string, pageStatus?: string | null) {
+
+    const keyCondition = {
+      id: id,
+    };
+
+    let filterCondition = {};
+    let queryOptions = { limit: 1 };
+
+    if(pageStatus) {
+      filterCondition = {
+        ...equals(String(pageStatus)),
+        subject: 'pageStatus'
+      };
+    }
+
+    if(!this.isEmpty(filterCondition)) {
+      queryOptions = {
+        ...queryOptions,
+        ... { filter: filterCondition }
+      };
+    }
+
+    const iterator = this.mapper.query(PageModel, keyCondition, queryOptions);
+
+    let result;
+
+    for await (const record of iterator) {
+      result = record;
+    }
+    return result;
   }
 
 
@@ -72,6 +106,12 @@ export class PageProvider {
     let queryOptions: IQueryOptions = {};
     let keyCondition: IKeyConditions = {};
 
+
+    if(args.options.limit) {
+      queryOptions.limit = args.options.limit;
+    }
+    queryOptions.indexName = 'PageStatusCreatedDateIndex';
+    queryOptions.scanIndexForward = false;
 
     if(args.status) {
       keyCondition.pageStatus = args.status;
@@ -111,12 +151,8 @@ export class PageProvider {
         ...args.options.startKey,
         ...keyCondition
       };
-
     }
 
-    if(args.options.limit) {
-      queryOptions.limit = args.options.limit;
-    }
 
     if(args.orderBy) {
       if(args.orderBy.name) {
@@ -126,9 +162,6 @@ export class PageProvider {
         queryOptions.indexName = 'PageStatusCreatedDateIndex';
         queryOptions.scanIndexForward = (args.orderBy.createdDate === 'asc') ? true : false;
       }
-    } else {
-      queryOptions.indexName = 'PageStatusCreatedDateIndex';
-      queryOptions.scanIndexForward = false;
     }
 
     return {
@@ -141,8 +174,6 @@ export class PageProvider {
   async getPages (args) {
 
     const { keyCondition, queryOptions } = this.getPagesParams(args);
-
-    //console.log('getpages log', PageModel, keyCondition,queryOptions);
 
     const paginator = this.mapper.query(
         PageModel,

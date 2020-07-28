@@ -11,6 +11,8 @@ export interface IConsultantInput {
     website: string;
     email: string;
     telephone: string;
+    services: object;
+    specialities: object;
 }
 
 

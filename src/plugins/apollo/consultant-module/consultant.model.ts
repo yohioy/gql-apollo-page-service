@@ -34,4 +34,10 @@ export class ConsultantModel {
     @attribute()
     telephone: string | undefined;
 
+    @attribute()
+    services: object | undefined;
+
+    @attribute()
+    specialities: object | undefined;
+
 }

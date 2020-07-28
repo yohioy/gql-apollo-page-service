@@ -16,8 +16,8 @@ type Consultant @key(fields: "id") {
     email: String
     website: String
     telephone: String
-    specialities: [SpecialityAndServicePages]
-    services: [SpecialityAndServicePages]
+    specialities(status: String): [SpecialityAndServicePages]
+    services(status: String): [SpecialityAndServicePages]
 }
 
 type SpecialityAndServicePages {

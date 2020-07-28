@@ -5,6 +5,7 @@ import { importSchema } from 'graphql-import';
 import { resolvers } from './resolvers';
 import { UsersProvider, AccessProvider } from '@masteryo/masteryo-gql-core-providers';
 import { ConsultantProvider } from './consultant.provider';
+import {PageProvider} from "../page-module/page.provider";
 import { isAuthorised } from '@masteryo/masteryo-gql-authorise';
 
 const types = path.join(__dirname, './schema.graphql');
@@ -23,6 +24,6 @@ export const ConsultantModule = new GraphQLModule({
     typeDefs: gql `
         ${typeDefs}
     `,
-    providers: [UsersProvider, AccessProvider, ConsultantProvider],
+    providers: [UsersProvider, AccessProvider, ConsultantProvider, PageProvider],
     context: session => session
 });
