@@ -1,11 +1,9 @@
-import { Query } from './Query';
 import { Mutation } from './Mutation';
 import { Page } from './Page';
 import { Consultant } from './Consultant';
 
-export const resolvers: any = {
+export const resolvers: object = {
     Mutation,
-    Query,
     Page,
     Consultant
 };

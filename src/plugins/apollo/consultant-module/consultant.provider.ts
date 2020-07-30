@@ -11,7 +11,7 @@ export class ConsultantProvider implements IConsultantProvider {
         this.mapper = moduleSessionInfo.session.request.dataMapper;
     }
 
-    async createConsultant (data: IConsultantInput): Promise<any> {
+    async createConsultant (data: IConsultantInput): Promise<object> {
 
         const consultant = new ConsultantModel();
 
@@ -23,7 +23,7 @@ export class ConsultantProvider implements IConsultantProvider {
     }
 
 
-    async updateConsultant (data: IConsultantInput): Promise<any> {
+    async updateConsultant (data: IConsultantInput): Promise<object> {
         const id = data.id;
         let page = await this.getConsultant(id);
 
@@ -35,7 +35,7 @@ export class ConsultantProvider implements IConsultantProvider {
     }
 
 
-    async getConsultant (id: string): Promise<any> {
+    async getConsultant (id: string): Promise<object> {
         const consultant = new ConsultantModel();
         consultant.id = id;
         return this.mapper.get(consultant);

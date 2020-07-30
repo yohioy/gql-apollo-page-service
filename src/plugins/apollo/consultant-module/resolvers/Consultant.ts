@@ -1,7 +1,8 @@
 import { PageProvider } from '../../page-module/page.provider';
+import { IConsultant } from '../interfaces';
 
-export const Consultant: any = {
-  services: async (parent: any, args: any, context: any) => {
+export const Consultant: IConsultant = {
+  services: async (parent: any, args: any, context: any): Promise<object> => {
         // console.log('services', parent.services);
       let result: any = [];
       let data: any = {};
@@ -19,7 +20,7 @@ export const Consultant: any = {
         }
       return result;
     },
-  specialities: async (parent: any, args: any, context: any) => {
+  specialities: async (parent: any, args: any, context: any): Promise<object> => {
 
       let result: any = [];
       let data: any = {};

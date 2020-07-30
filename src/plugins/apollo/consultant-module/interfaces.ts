@@ -17,9 +17,20 @@ export interface IPage {
     consultantInfo: object;
 }
 
+export interface IConsultant {
+    services: object;
+    specialities: object;
+}
+
+export interface IResponse {
+    data?: object,
+    code: number,
+    message: string
+}
+
 export interface IConsultantProvider {
     mapper: object;
-    createConsultant (data: IConsultantInput): Promise<any>;
-    updateConsultant (data: IConsultantInput): Promise<any>;
-    getConsultant (id: string): Promise<any>;
+    createConsultant (data: IConsultantInput): Promise<object>;
+    updateConsultant (data: IConsultantInput): Promise<object>;
+    getConsultant (id: string): Promise<object>;
 }
