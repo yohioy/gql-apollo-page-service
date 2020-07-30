@@ -1,40 +1,40 @@
-import { PageProvider } from "../../page-module/page.provider";
+import { PageProvider } from '../../page-module/page.provider';
 
 export const Consultant: any = {
-    services: async (parent: any, args: any, context: any) => {
-        //console.log('services', parent.services);
-        let result: any = [];
-        let data: any = {};
+  services: async (parent: any, args: any, context: any) => {
+        // console.log('services', parent.services);
+      let result: any = [];
+      let data: any = {};
 
-        const pageStatus = args.hasOwnProperty('status') ? args.status : null;
-        const services = parent.services;
+      const pageStatus = ('status' in args) ? args.status : null;
+      const services = parent.services;
 
-        if(services.length > 0) {
-            for(let i=0; i < services.length; i++){
-                data = await context.injector.get(PageProvider).getPage(services[i].id, pageStatus);
-                if(data) {
-                    result.push(data);
+      if (services.length > 0) {
+          for (let i = 0; i < services.length; i++) {
+              data = await context.injector.get(PageProvider).getPage(services[i].id, pageStatus);
+              if (data) {
+                  result.push(data);
                 }
             }
         }
-        return result;
+      return result;
     },
-    specialities: async (parent: any, args: any, context: any) => {
+  specialities: async (parent: any, args: any, context: any) => {
 
-        let result: any = [];
-        let data: any = {};
+      let result: any = [];
+      let data: any = {};
 
-        const pageStatus = args.hasOwnProperty('status') ? args.status : null;
-        const specialities = parent.specialities;
+      const pageStatus = ('status' in args) ? args.status : null;
+      const specialities = parent.specialities;
 
-        if(specialities.length > 0) {
-            for(let i=0; i < specialities.length; i++){
-                data = await context.injector.get(PageProvider).getPage(specialities[i].id, pageStatus);
-                if(data) {
-                    result.push(data);
+      if (specialities.length > 0) {
+          for (let i = 0; i < specialities.length; i++) {
+              data = await context.injector.get(PageProvider).getPage(specialities[i].id, pageStatus);
+              if (data) {
+                  result.push(data);
                 }
             }
         }
-        return result;
-    },
-}
+      return result;
+    }
+};
