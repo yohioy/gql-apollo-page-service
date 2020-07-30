@@ -1,10 +1,7 @@
 import { ModuleContext } from '@graphql-modules/core';
 import { responseType } from '@masteryo/masteryo-utils';
-import { ConsultantProvider, IConsultantInput } from '../consultant.provider';
-
-export interface IMutation {
-    createConsultant: object;
-}
+import { IConsultantInput, IMutation } from '../interfaces';
+import { ConsultantProvider } from '../consultant.provider';
 
 export const Mutation: IMutation = {
     createConsultant: async (parent: any, args: {data: IConsultantInput}, context: ModuleContext): Promise<any> => {

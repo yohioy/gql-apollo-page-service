@@ -1,23 +1,10 @@
 import {Injectable} from '@graphql-modules/di';
 import {ModuleSessionInfo} from '@graphql-modules/core';
 import { ConsultantModel } from './consultant.model';
-
-export interface IConsultantInput {
-    id: string;
-    nameCharacters: string;
-    qualifications: string;
-    interests: string;
-    hospitals: string;
-    website: string;
-    email: string;
-    telephone: string;
-    services: object;
-    specialities: object;
-}
-
+import { IConsultantInput, IConsultantProvider } from './interfaces';
 
 @Injectable()
-export class ConsultantProvider {
+export class ConsultantProvider implements IConsultantProvider {
     public mapper;
 
     constructor (private moduleSessionInfo: ModuleSessionInfo) {
